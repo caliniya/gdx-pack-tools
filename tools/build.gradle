@@ -1,0 +1,44 @@
+apply plugin: "java-library"
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    // 可选：图片处理库
+    //implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
+    //implementation 'com.twelvemonkeys.imageio:imageio-png:3.8.2'
+}
+
+task buildTexturePacker(type: Jar) {
+    archiveBaseName = 'buildTexturePacker'
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+    
+    manifest {
+        attributes 'Main-Class': 'armadax.tools.TexturePackerTool'
+    }
+    
+    duplicatesStrategy = 'exclude'
+}
+
+task assetsTool(type: JavaExec) {
+    // 使用运行时类路径而不是仅JAR文件
+    classpath = sourceSets.main.runtimeClasspath
+    
+    mainClass = 'armadax.tools.TexturePackerTool'
+    
+    args = [
+        "${rootDir}/assets/sprites/",
+        "${rootDir}/assets-pack/sprites/",
+        "game_textures"
+    ]
+    
+    // 确保先编译（如果需要）
+    dependsOn classes
+}
+
+artifacts {
+    archives buildTexturePacker
+}
