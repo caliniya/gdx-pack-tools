@@ -4,6 +4,7 @@ dependencies {
     api "com.badlogicgames.gdx:gdx:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     // 可选：图片处理库
+    //TODO 未实现
     //implementation 'com.twelvemonkeys.imageio:imageio-core:3.8.2'
     //implementation 'com.twelvemonkeys.imageio:imageio-png:3.8.2'
 }
@@ -17,7 +18,7 @@ task buildTexturePacker(type: Jar) {
     }
     
     manifest {
-        attributes 'Main-Class': 'armadax.tools.TexturePackerTool'
+        attributes 'Main-Class': 'caliniya.tools.TexturePackerTool'
     }
     
     duplicatesStrategy = 'exclude'
@@ -27,12 +28,12 @@ task assetsTool(type: JavaExec) {
     // 使用运行时类路径而不是仅JAR文件
     classpath = sourceSets.main.runtimeClasspath
     
-    mainClass = 'armadax.tools.TexturePackerTool'
+    mainClass = 'caliniya.tools.TexturePackerTool'
     
     args = [
-        "${rootDir}/assets/sprites/",
-        "${rootDir}/assets-pack/sprites/",
-        "game_textures"
+        "${rootDir}/assets/sprites/",//输入目录
+        "${rootDir}/assets-pack/sprites/",//输出目录
+        "sprites"//打包后的文件名
     ]
     
     // 确保先编译（如果需要）
